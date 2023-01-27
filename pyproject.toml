@@ -1,0 +1,83 @@
+[tool.poetry]
+name = "skribbliogen"
+version = "0.1.0"
+description = ""
+authors = ["Суханов Евгений <es.sukhanov@samolet.ru>"]
+readme = "README.md"
+packages = [{include = "skribbliogen", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pytest = "^7.2.1"
+
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^2.21.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+py_version = 311
+profile = "black"
+src_paths = ["src", "tests"]
+extend_skip = ["setup.py"]
+known_third_party = ["poetry.core"]
+
+
+[tool.black]
+target-version = ['py311']
+preview = true
+force-exclude = '''
+.*/setup\.py$
+'''
+
+
+[tool.mypy]
+files = "src"
+mypy_path = "src"
+namespace_packages = true
+explicit_package_bases = true
+show_error_codes = true
+strict = true
+enable_error_code = [
+    "ignore-without-code",
+    "redundant-expr",
+    "truthy-bool",
+]
+
+[[tool.mypy.overrides]]
+module = [
+  'poetry.console.commands.self.show.plugins',
+  'poetry.plugins.plugin_manager',
+  'poetry.repositories.installed_repository',
+  'poetry.utils.env',
+]
+warn_unused_ignores = false
+
+[[tool.mypy.overrides]]
+module = [
+  'cachecontrol.*',
+  'lockfile.*',
+  'pexpect.*',
+  'requests_toolbelt.*',
+  'shellingham.*',
+  'virtualenv.*',
+  'xattr.*',
+]
+ignore_missing_imports = true
+
+
+[tool.pytest.ini_options]
+addopts = "-n auto"
+testpaths = [
+    "tests"
+]
+
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:"
+]
